@@ -1,0 +1,680 @@
+import base64
+
+with open('/mnt/user-data/uploads/SFUIDisplay-Heavy.otf','rb') as f:
+    heavy_b64 = base64.b64encode(f.read()).decode()
+
+with open('/mnt/user-data/uploads/SFUIDisplay-Semibold.otf','rb') as f:
+    semi_b64 = base64.b64encode(f.read()).decode()
+
+with open('/mnt/user-data/uploads/variations-to-the-minecraft-logo-v0-0dzqovtefeqd1-removebg-preview.png','rb') as f:
+    grass_b64 = base64.b64encode(f.read()).decode()
+
+html = f"""<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eclypse - Máy Chủ Minecraft</title>
+    <style>
+        @font-face {{
+            font-family: 'SF UI Display';
+            src: url('data:font/otf;base64,{heavy_b64}') format('opentype');
+            font-weight: 800 900;
+            font-style: normal;
+            font-display: swap;
+        }}
+        @font-face {{
+            font-family: 'SF UI Display';
+            src: url('data:font/otf;base64,{semi_b64}') format('opentype');
+            font-weight: 400 600;
+            font-style: normal;
+            font-display: swap;
+        }}
+
+        :root {{
+            --md-primary:        #B3261E;
+            --md-on-primary:     #FFFFFF;
+            --md-primary-cont:   #8C1D18;
+            --md-primary-bright: #E46962;
+            --md-surface:        #141218;
+            --md-surface-var:    #1E1B20;
+            --md-surface-cont:   #2A2730;
+            --md-on-surface:     #E6E1E5;
+            --md-on-surface-dim: #938F99;
+            --md-outline:        #49454F;
+            --font-sf: 'SF UI Display', -apple-system, 'Helvetica Neue', Arial, sans-serif;
+        }}
+
+        *, *::before, *::after {{ box-sizing: border-box; margin: 0; padding: 0; }}
+        html {{ scroll-behavior: smooth; }}
+
+        body {{
+            background-color: var(--md-surface);
+            color: var(--md-on-surface);
+            font-family: var(--font-sf);
+            font-weight: 400;
+            padding-top: 64px;
+            line-height: 1.6;
+        }}
+
+        ::-webkit-scrollbar {{ width: 6px; }}
+        ::-webkit-scrollbar-track {{ background: var(--md-surface); }}
+        ::-webkit-scrollbar-thumb {{ background: var(--md-primary-cont); border-radius: 3px; }}
+
+        /* ── NAVBAR ── */
+        .navbar {{
+            position: fixed; top: 0; left: 0; width: 100%;
+            height: 64px;
+            background: rgba(20,18,24,0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(179,38,30,0.25);
+            z-index: 200;
+            display: flex; align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+        }}
+        .navbar-logo {{
+            font-family: var(--font-sf);
+            font-weight: 900;
+            font-size: 1.55rem;
+            color: var(--md-primary-bright);
+            letter-spacing: 0.06em;
+            text-decoration: none;
+            text-transform: uppercase;
+            position: relative;
+        }}
+        .navbar-logo::after {{
+            content: '';
+            position: absolute; bottom: -3px; left: 0;
+            width: 100%; height: 2px;
+            background: var(--md-primary);
+            transform: scaleX(0); transform-origin: left;
+            transition: transform 0.3s ease;
+        }}
+        .navbar-logo:hover::after {{ transform: scaleX(1); }}
+
+        .navbar-menu {{ display: flex; gap: 8px; align-items: center; }}
+        .navbar-menu a {{
+            font-family: var(--font-sf); font-weight: 600;
+            font-size: 0.82rem; letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--md-on-surface);
+            text-decoration: none;
+            padding: 8px 16px; border-radius: 20px;
+            transition: background 0.25s, color 0.25s;
+        }}
+        .navbar-menu a:hover {{
+            background: rgba(179,38,30,0.15);
+            color: var(--md-primary-bright);
+        }}
+        .navbar-menu a.cta {{
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+        }}
+        .navbar-menu a.cta:hover {{
+            background: var(--md-primary-bright);
+            color: #0d0608;
+        }}
+
+        /* ── TICKER ── */
+        .ticker {{
+            position: fixed; top: 64px; width: 100%;
+            background: var(--md-primary);
+            color: var(--md-on-primary);
+            font-family: var(--font-sf);
+            font-size: 0.78rem; font-weight: 600;
+            letter-spacing: 0.18em;
+            padding: 7px 0; overflow: hidden;
+            z-index: 199;
+        }}
+        .ticker-inner {{
+            display: inline-block; white-space: nowrap;
+            animation: ticker-scroll 22s linear infinite;
+        }}
+        @keyframes ticker-scroll {{
+            from {{ transform: translateX(100vw); }}
+            to   {{ transform: translateX(-100%); }}
+        }}
+
+        /* ── HERO ── */
+        #home {{
+            min-height: 90vh;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            padding: 80px 20px 60px;
+            position: relative; overflow: hidden;
+        }}
+        #home::before {{
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(179,38,30,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(179,38,30,0.06) 1px, transparent 1px);
+            background-size: 48px 48px;
+            animation: grid-drift 30s linear infinite;
+        }}
+        @keyframes grid-drift {{
+            from {{ background-position: 0 0; }}
+            to   {{ background-position: 48px 48px; }}
+        }}
+        #home::after {{
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 70% 60% at 50% 40%,
+                rgba(140,29,24,0.35) 0%, transparent 70%);
+            pointer-events: none;
+        }}
+        .hero-content {{ position: relative; z-index: 2; max-width: 900px; }}
+
+        /* Rotator */
+        .hero-rotator {{
+            display: inline-block;
+            height: 1.12em; overflow: hidden;
+            vertical-align: bottom;
+        }}
+        .hero-rotator-track {{
+            display: flex; flex-direction: column;
+            transition: transform 0.5s cubic-bezier(0.77,0,0.18,1);
+        }}
+        .hero-rotator-item {{
+            color: var(--md-primary-bright);
+            white-space: nowrap;
+            line-height: 1.12em;
+            display: block;
+        }}
+
+        .hero-title {{
+            font-family: var(--font-sf); font-weight: 900;
+            font-size: clamp(3rem, 8vw, 6rem);
+            letter-spacing: -0.02em; line-height: 1.05;
+            margin-bottom: 24px; text-transform: uppercase;
+        }}
+        .hero-sub {{
+            font-family: var(--font-sf); font-weight: 400;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            color: var(--md-on-surface-dim);
+            max-width: 600px; margin: 0 auto 48px; line-height: 1.75;
+        }}
+
+        .btn-row {{
+            display: flex; gap: 16px;
+            justify-content: center; flex-wrap: wrap;
+        }}
+        .btn-filled {{
+            font-family: var(--font-sf); font-weight: 600;
+            font-size: 0.95rem; letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: var(--md-primary); color: var(--md-on-primary);
+            border: none; border-radius: 100px;
+            padding: 16px 40px; cursor: pointer;
+            text-decoration: none; display: inline-flex;
+            align-items: center; gap: 10px;
+            transition: background 0.25s, transform 0.2s, box-shadow 0.25s;
+            box-shadow: 0 4px 20px rgba(179,38,30,0.45);
+        }}
+        .btn-filled:hover {{
+            background: var(--md-primary-bright);
+            color: #0d0608; transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(228,105,98,0.5);
+        }}
+        .btn-filled:active {{ transform: scale(0.97); }}
+
+        .btn-tonal {{
+            font-family: var(--font-sf); font-weight: 600;
+            font-size: 0.95rem; letter-spacing: 0.06em;
+            text-transform: uppercase;
+            background: var(--md-surface-cont);
+            color: var(--md-primary-bright);
+            border: 1px solid var(--md-outline); border-radius: 100px;
+            padding: 16px 40px; cursor: pointer;
+            text-decoration: none; display: inline-flex;
+            align-items: center; gap: 10px;
+            transition: background 0.25s, transform 0.2s, border-color 0.25s;
+        }}
+        .btn-tonal:hover {{
+            background: rgba(179,38,30,0.12);
+            border-color: var(--md-primary); transform: translateY(-2px);
+        }}
+
+        .ip-chip {{
+            display: inline-flex; align-items: center; gap: 8px;
+            margin-top: 32px;
+            background: var(--md-surface-var);
+            border: 1px solid var(--md-outline); border-radius: 100px;
+            padding: 8px 20px;
+            font-family: var(--font-sf); font-weight: 400;
+            font-size: 0.92rem; color: var(--md-on-surface-dim);
+            letter-spacing: 0.04em;
+        }}
+        .ip-dot {{
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #4CAF50; flex-shrink: 0;
+            animation: pulse-dot 2s infinite;
+        }}
+        @keyframes pulse-dot {{
+            0%,100% {{ box-shadow: 0 0 0 0 rgba(76,175,80,0.5); }}
+            50%      {{ box-shadow: 0 0 0 5px rgba(76,175,80,0); }}
+        }}
+
+        /* ── SHARED ── */
+        .section {{ padding: 100px 20px; max-width: 1200px; margin: 0 auto; }}
+        .section-eyebrow {{
+            font-family: var(--font-sf); font-weight: 600;
+            font-size: 0.72rem; letter-spacing: 0.22em;
+            text-transform: uppercase; color: var(--md-primary-bright);
+            margin-bottom: 12px;
+        }}
+        .section-title {{
+            font-family: var(--font-sf); font-weight: 900;
+            font-size: clamp(2rem, 4vw, 3rem);
+            letter-spacing: -0.01em; margin-bottom: 48px;
+        }}
+        .accent {{ color: var(--md-primary-bright); }}
+        .divider {{
+            width: 60px; height: 3px;
+            background: var(--md-primary); border-radius: 2px;
+            margin: 0 0 40px;
+        }}
+
+        /* ── STATS ── */
+        .stats-strip {{ background: var(--md-primary-cont); padding: 48px 20px; }}
+        .stats-inner {{
+            max-width: 1200px; margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px,1fr));
+            gap: 32px; text-align: center;
+        }}
+        .stat-val {{
+            font-family: var(--font-sf); font-weight: 900;
+            font-size: 2.5rem; color: var(--md-on-primary);
+            letter-spacing: -0.02em;
+        }}
+        .stat-lbl {{
+            font-family: var(--font-sf); font-weight: 400;
+            font-size: 0.78rem; letter-spacing: 0.14em;
+            text-transform: uppercase; color: rgba(255,255,255,0.65);
+            margin-top: 4px;
+        }}
+
+        /* ── SURVIVAL CARD ── */
+        .survival-card {{
+            display: grid; grid-template-columns: 1fr 1fr;
+            background: var(--md-surface-var);
+            border: 1px solid rgba(179,38,30,0.3);
+            border-radius: 24px; overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }}
+        .survival-card:hover {{
+            transform: translateY(-6px);
+            box-shadow: 0 20px 60px rgba(179,38,30,0.25);
+        }}
+        .survival-visual {{
+            background: linear-gradient(135deg,#1a0808 0%,var(--md-primary-cont) 60%,#3d1010 100%);
+            display: flex; align-items: center; justify-content: center;
+            min-height: 280px; position: relative; overflow: hidden;
+        }}
+        .survival-visual::before {{
+            content: '';
+            position: absolute; inset: 0;
+            background-image:
+                linear-gradient(rgba(255,255,255,0.03) 1px,transparent 1px),
+                linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
+            background-size: 24px 24px;
+        }}
+        .survival-block-img {{
+            width: 130px; height: 130px;
+            object-fit: contain;
+            position: relative; z-index: 1;
+            filter: drop-shadow(0 8px 28px rgba(228,105,98,0.45));
+            animation: float 4s ease-in-out infinite;
+        }}
+        @keyframes float {{
+            0%,100% {{ transform: translateY(0) rotate(-2deg); }}
+            50%      {{ transform: translateY(-14px) rotate(2deg); }}
+        }}
+        .survival-info {{
+            padding: 48px 40px;
+            display: flex; flex-direction: column; justify-content: center;
+        }}
+        .mode-badge {{
+            display: inline-flex; align-items: center; gap: 6px;
+            background: rgba(179,38,30,0.2);
+            border: 1px solid var(--md-primary);
+            color: var(--md-primary-bright);
+            font-family: var(--font-sf); font-weight: 600;
+            font-size: 0.68rem; letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 4px 12px; border-radius: 100px;
+            margin-bottom: 20px; width: fit-content;
+        }}
+        .survival-info h3 {{
+            font-family: var(--font-sf); font-weight: 900;
+            font-size: 2rem; letter-spacing: -0.01em; margin-bottom: 16px;
+        }}
+        .survival-info p {{
+            font-family: var(--font-sf); font-weight: 400;
+            color: var(--md-on-surface-dim);
+            line-height: 1.75; margin-bottom: 24px;
+        }}
+        .feature-pills {{ display: flex; flex-wrap: wrap; gap: 8px; }}
+        .pill {{
+            background: var(--md-surface-cont);
+            border: 1px solid var(--md-outline); color: var(--md-on-surface);
+            font-family: var(--font-sf); font-weight: 400;
+            font-size: 0.78rem; padding: 5px 14px; border-radius: 100px;
+        }}
+
+        /* ── TEAM ── */
+        .team-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+            gap: 24px;
+        }}
+        .team-card {{
+            background: var(--md-surface-var);
+            border: 1px solid rgba(179,38,30,0.2);
+            border-radius: 20px; padding: 36px 32px; text-align: center;
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }}
+        .team-card:hover {{
+            transform: translateY(-6px);
+            border-color: var(--md-primary);
+            box-shadow: 0 12px 40px rgba(179,38,30,0.2);
+        }}
+        .team-avatar {{
+            width: 88px; height: 88px; border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 2px solid rgba(228,105,98,0.4);
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--md-primary), var(--md-primary-cont));
+            display: flex; align-items: center; justify-content: center;
+        }}
+        .team-avatar img {{
+            width: 100%; height: 100%; object-fit: cover; display: block;
+        }}
+        .avatar-placeholder {{ font-size: 2.2rem; line-height: 1; }}
+        .team-name {{
+            font-family: var(--font-sf); font-weight: 900;
+            font-size: 1.3rem; margin-bottom: 8px; letter-spacing: 0.01em;
+        }}
+        .team-role {{
+            display: inline-block;
+            background: rgba(179,38,30,0.15);
+            border: 1px solid var(--md-primary);
+            color: var(--md-primary-bright);
+            font-family: var(--font-sf); font-weight: 600;
+            font-size: 0.7rem; letter-spacing: 0.15em;
+            text-transform: uppercase;
+            padding: 3px 12px; border-radius: 100px;
+        }}
+
+        /* ── FOOTER ── */
+        footer {{
+            background: #0D0B0F;
+            border-top: 1px solid rgba(179,38,30,0.2);
+            padding: 48px 20px 32px; text-align: center;
+        }}
+        .footer-logo {{
+            font-family: var(--font-sf); font-weight: 900;
+            font-size: 1.8rem;
+            color: var(--md-primary-bright);
+            letter-spacing: 0.1em; text-transform: uppercase;
+            margin-bottom: 24px;
+        }}
+        .footer-links {{
+            display: flex; justify-content: center;
+            flex-wrap: wrap; gap: 8px; margin-bottom: 24px;
+        }}
+        .footer-links a {{
+            font-family: var(--font-sf); font-weight: 400;
+            color: var(--md-on-surface-dim);
+            text-decoration: none; font-size: 0.88rem;
+            padding: 6px 16px; border-radius: 100px;
+            transition: color 0.25s, background 0.25s;
+        }}
+        .footer-links a:hover {{
+            color: var(--md-primary-bright);
+            background: rgba(179,38,30,0.1);
+        }}
+        .footer-contact {{
+            font-family: var(--font-sf); font-weight: 400;
+            font-size: 0.84rem;
+            color: var(--md-on-surface-dim);
+            margin-bottom: 12px;
+        }}
+        .footer-contact a {{
+            color: var(--md-primary-bright); text-decoration: none;
+            font-weight: 600; transition: opacity 0.2s;
+        }}
+        .footer-contact a:hover {{ opacity: 0.75; }}
+        .footer-copy {{
+            font-family: var(--font-sf); font-weight: 400;
+            color: var(--md-on-surface-dim);
+            font-size: 0.82rem; margin-bottom: 8px;
+        }}
+        .footer-credits {{
+            font-family: var(--font-sf); font-weight: 400;
+            font-size: 0.78rem; color: #5a5560;
+        }}
+        .footer-credits span {{ color: var(--md-primary-bright); font-weight: 600; }}
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 768px) {{
+            .navbar {{ padding: 0 20px; }}
+            .navbar-menu a {{ padding: 6px 10px; font-size: 0.72rem; }}
+            .survival-card {{ grid-template-columns: 1fr; }}
+            .survival-info {{ padding: 32px 24px; }}
+            body {{ padding-top: 100px; }}
+        }}
+        @media (max-width: 480px) {{
+            .navbar-menu a:not(.cta) {{ display: none; }}
+        }}
+        @media (prefers-reduced-motion: reduce) {{
+            .hero-rotator-track {{ transition: none; }}
+            .ticker-inner, #home::before, .survival-block-img {{ animation: none; }}
+        }}
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="#home" class="navbar-logo">Eclypse</a>
+        <div class="navbar-menu">
+            <a href="#gamemodes">Chế Độ Chơi</a>
+            <a href="#team">Đội Ngũ</a>
+            <a href="https://discord.gg/grRja4eXvX" target="_blank" rel="noopener" class="cta">Discord</a>
+        </div>
+    </nav>
+
+    <!-- TICKER -->
+    <div class="ticker" aria-hidden="true">
+        <span class="ticker-inner">
+            ✦ ECLYPSE &nbsp;&nbsp;·&nbsp;&nbsp; MÁY CHỦ MINECRAFT SINH TỒN &nbsp;&nbsp;·&nbsp;&nbsp;
+            THAM GIA DISCORD CỦA CHÚNG TÔI &nbsp;&nbsp;·&nbsp;&nbsp;
+            ECLYPSE &nbsp;&nbsp;·&nbsp;&nbsp; MÁY CHỦ MINECRAFT SINH TỒN &nbsp;&nbsp;·&nbsp;&nbsp;
+            THAM GIA DISCORD CỦA CHÚNG TÔI &nbsp;&nbsp;·&nbsp;&nbsp; ✦
+        </span>
+    </div>
+
+    <!-- HERO -->
+    <section id="home">
+        <div class="hero-content">
+            <p class="section-eyebrow" style="margin-bottom:20px;">Máy Chủ Minecraft Việt Nam</p>
+            <h1 class="hero-title">
+                Chào Mừng Đến<br>
+                <span class="hero-rotator" id="rotator" aria-live="polite">
+                    <span class="hero-rotator-track" id="rotatorTrack">
+                        <span class="hero-rotator-item">Eclypse</span>
+                        <span class="hero-rotator-item">Sinh Tồn</span>
+                        <span class="hero-rotator-item">Phiêu Lưu</span>
+                        <span class="hero-rotator-item">Eclypse</span>
+                    </span>
+                </span>
+            </h1>
+            <p class="hero-sub">
+                Trải nghiệm chế độ sinh tồn Minecraft thuần khiết, cùng cộng đồng thân thiện và thế giới không giới hạn. Xây dựng, khám phá và chinh phục cùng chúng tôi.
+            </p>
+            <div class="btn-row">
+                <button class="btn-filled" onclick="copyIP()">
+                    <span>⬡</span>
+                    <span id="btnText">Sao Chép IP &amp; Chơi Ngay</span>
+                </button>
+                <a href="https://discord.gg/grRja4eXvX" target="_blank" rel="noopener" class="btn-tonal">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+                    </svg>
+                    Tham Gia Discord
+                </a>
+            </div>
+            <div class="ip-chip">
+                <span class="ip-dot"></span>
+                IP: <span id="ipDisplay">play.eclypse.shop</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-strip">
+        <div class="stats-inner">
+            <div>
+                <div class="stat-val">24/7</div>
+                <div class="stat-lbl">Hoạt Động</div>
+            </div>
+            <div>
+                <div class="stat-val">1.20+</div>
+                <div class="stat-lbl">Phiên Bản</div>
+            </div>
+            <div>
+                <div class="stat-val">100%</div>
+                <div class="stat-lbl">Sinh Tồn Thuần</div>
+            </div>
+            <div>
+                <div class="stat-val">0₫</div>
+                <div class="stat-lbl">Miễn Phí</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAMEMODES -->
+    <div class="section" id="gamemodes">
+        <p class="section-eyebrow">Chế Độ Chơi</p>
+        <h2 class="section-title">Chỉ Có <span class="accent">Sinh Tồn</span></h2>
+        <div class="divider"></div>
+        <div class="survival-card">
+            <div class="survival-visual">
+                <img class="survival-block-img"
+                     src="data:image/png;base64,{grass_b64}"
+                     alt="Minecraft grass block - Sinh tồn">
+            </div>
+            <div class="survival-info">
+                <div class="mode-badge"><span>▶</span> Đang hoạt động</div>
+                <h3>Sinh Tồn</h3>
+                <p>
+                    Thế giới sinh tồn Minecraft thuần khiết không bị can thiệp bởi pay-to-win.
+                    Thu thập tài nguyên, xây dựng căn cứ, chinh phục trùm và thách thức mọi giới hạn
+                    cùng cộng đồng người chơi Việt Nam.
+                </p>
+                <div class="feature-pills">
+                    <span class="pill">🌍 Thế giới mở</span>
+                    <span class="pill">🛡️ PvP / PvE</span>
+                    <span class="pill">🏠 Đất đai</span>
+                    <span class="pill">💎 Economy</span>
+                    <span class="pill">📦 Kho đồ</span>
+                    <span class="pill">⚙️ Plugin tùy chỉnh</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TEAM -->
+    <div class="section" id="team">
+        <p class="section-eyebrow">Đội Ngũ</p>
+        <h2 class="section-title">Những Người <span class="accent">Tạo Nên</span> Eclypse</h2>
+        <div class="divider"></div>
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-avatar" id="avatar-senerus">
+                    <span class="avatar-placeholder">👑</span>
+                </div>
+                <div class="team-name">Senerus</div>
+                <div class="team-role">Chủ Sở Hữu · Owner</div>
+            </div>
+            <div class="team-card">
+                <div class="team-avatar" id="avatar-roty">
+                    <span class="avatar-placeholder">🌟</span>
+                </div>
+                <div class="team-name">Roty</div>
+                <div class="team-role">Người Sáng Lập · Founder</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">Eclypse</div>
+        <div class="footer-links">
+            <a href="#home">Trang Chủ</a>
+            <a href="#gamemodes">Chế Độ Chơi</a>
+            <a href="#team">Đội Ngũ</a>
+            <a href="https://discord.gg/grRja4eXvX" target="_blank" rel="noopener">Discord</a>
+        </div>
+        <p class="footer-contact">
+            Liên hệ: <a href="mailto:senerus@eclypse.shop">senerus@eclypse.shop</a>
+        </p>
+        <p class="footer-copy">&copy; 2026 Eclypse. Tất cả quyền được bảo lưu.</p>
+        <p class="footer-credits">
+            Chủ sở hữu: <span>Senerus</span> &nbsp;·&nbsp; Người sáng lập: <span>Roty</span>
+            &nbsp;·&nbsp; Website by <span>Misuka (Senerus)</span>
+        </p>
+    </footer>
+
+    <script>
+        const SERVER_IP = "play.eclypse.shop";
+
+        function copyIP() {{
+            navigator.clipboard.writeText(SERVER_IP).then(() => {{
+                const btn   = document.querySelector('.btn-filled');
+                const label = document.getElementById('btnText');
+                const orig  = label.textContent;
+                label.textContent = "Đã Sao Chép! ✓";
+                btn.style.background = "#388E3C";
+                btn.style.boxShadow  = "0 4px 20px rgba(76,175,80,0.5)";
+                setTimeout(() => {{
+                    label.textContent    = orig;
+                    btn.style.background = "";
+                    btn.style.boxShadow  = "";
+                }}, 1800);
+            }}).catch(() => {{
+                alert("Vui lòng sao chép thủ công: " + SERVER_IP);
+            }});
+        }}
+
+        /* Smooth slide rotator */
+        const track  = document.getElementById('rotatorTrack');
+        const total  = track.querySelectorAll('.hero-rotator-item').length - 1;
+        let current  = 0;
+
+        function nextSlide() {{
+            current++;
+            track.style.transition = "transform 0.5s cubic-bezier(0.77,0,0.18,1)";
+            track.style.transform  = `translateY(-${{current * 1.12}}em)`;
+            if (current >= total) {{
+                setTimeout(() => {{
+                    track.style.transition = "none";
+                    track.style.transform  = "translateY(0)";
+                    current = 0;
+                }}, 520);
+            }}
+        }}
+        setInterval(nextSlide, 2400);
+
+        /* Navbar shadow on scroll */
+        window.addEventListener('scroll', () => {{
+            document.querySelector('.navbar').style.boxShadow =
+                window.scrollY > 20 ? "0 4px 24px rgba(0,0,0,0.6)" : "none";
+        }});
+    </script>
+</body>
+</html>
